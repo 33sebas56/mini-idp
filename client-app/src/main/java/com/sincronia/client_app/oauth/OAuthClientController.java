@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -98,6 +97,7 @@ public class OAuthClientController {
         TokenResponse tokenResponse = exchangeCodeForToken(code);
 
         session.setAttribute("access_token", tokenResponse.accessToken());
+        session.setAttribute("refresh_token", tokenResponse.refreshToken());
         session.removeAttribute("oauth_state");
 
         return "redirect:/dashboard";
@@ -106,6 +106,7 @@ public class OAuthClientController {
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
         String accessToken = (String) session.getAttribute("access_token");
+        String refreshToken = (String) session.getAttribute("refresh_token");
 
         if (accessToken == null || accessToken.isBlank()) {
             return "redirect:/login";
@@ -119,9 +120,26 @@ public class OAuthClientController {
         model.addAttribute("audience", jwt.getAudience());
         model.addAttribute("scope", jwt.getClaimAsString("scope"));
         model.addAttribute("jti", jwt.getId());
-        model.addAttribute("tokenPreview", accessToken.substring(0, Math.min(accessToken.length(), 80)) + "...");
+        model.addAttribute("tokenPreview", preview(accessToken));
+        model.addAttribute("refreshTokenPreview", preview(refreshToken));
 
         return "dashboard";
+    }
+
+    @GetMapping("/refresh-token")
+    public String refreshToken(HttpSession session) {
+        String refreshToken = (String) session.getAttribute("refresh_token");
+
+        if (refreshToken == null || refreshToken.isBlank()) {
+            return "redirect:/login";
+        }
+
+        TokenResponse tokenResponse = exchangeRefreshToken(refreshToken);
+
+        session.setAttribute("access_token", tokenResponse.accessToken());
+        session.setAttribute("refresh_token", tokenResponse.refreshToken());
+
+        return "redirect:/dashboard";
     }
 
     @GetMapping("/logout")
@@ -145,5 +163,29 @@ public class OAuthClientController {
                 .body(form)
                 .retrieve()
                 .body(TokenResponse.class);
+    }
+
+    private TokenResponse exchangeRefreshToken(String refreshToken) {
+        LinkedMultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+        form.add("grant_type", "refresh_token");
+        form.add("client_id", clientId);
+        form.add("client_secret", clientSecret);
+        form.add("refresh_token", refreshToken);
+
+        return restClient
+                .post()
+                .uri(tokenUri)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(form)
+                .retrieve()
+                .body(TokenResponse.class);
+    }
+
+    private String preview(String value) {
+        if (value == null || value.isBlank()) {
+            return "No disponible";
+        }
+
+        return value.substring(0, Math.min(value.length(), 80)) + "...";
     }
 }

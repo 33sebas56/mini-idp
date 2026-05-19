@@ -11,4 +11,6 @@ public interface SigningKeyRepository extends JpaRepository<SigningKey, UUID> {
     Optional<SigningKey> findFirstByActiveTrueOrderByCreatedAtDesc();
 
     List<SigningKey> findByActiveTrueOrderByCreatedAtDesc();
+
+    Optional<SigningKey> findByKid(String kid);
 }

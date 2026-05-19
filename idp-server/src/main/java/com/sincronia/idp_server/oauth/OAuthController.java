@@ -1,7 +1,9 @@
 package com.sincronia.idp_server.oauth;
 
 import com.sincronia.idp_server.exception.ApiException;
+import com.sincronia.idp_server.oauth.dto.IntrospectionResponse;
 import com.sincronia.idp_server.oauth.dto.OAuthPasswordStepResult;
+import com.sincronia.idp_server.oauth.dto.RevokeResponse;
 import com.sincronia.idp_server.oauth.dto.TokenResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
@@ -10,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -111,20 +114,55 @@ public class OAuthController {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
     )
     public TokenResponse token(
-            @RequestParam("grant_type") String grantType,
-            @RequestParam("client_id") String clientId,
-            @RequestParam("client_secret") String clientSecret,
-            @RequestParam("code") String code,
-            @RequestParam("redirect_uri") String redirectUri,
+            @RequestParam Map<String, String> params,
             HttpServletRequest httpServletRequest
     ) {
-        return oauthAuthorizationService.exchangeAuthorizationCode(
-                grantType,
+        return oauthAuthorizationService.token(
+                params.get("grant_type"),
+                params.get("client_id"),
+                params.get("client_secret"),
+                params.get("code"),
+                params.get("redirect_uri"),
+                params.get("refresh_token"),
+                httpServletRequest
+        );
+    }
+
+    @ResponseBody
+    @PostMapping(
+            value = "/oauth/revoke",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
+    )
+    public RevokeResponse revoke(
+            @RequestParam("client_id") String clientId,
+            @RequestParam("client_secret") String clientSecret,
+            @RequestParam("token") String token,
+            @RequestParam(value = "token_type_hint", required = false) String tokenTypeHint,
+            HttpServletRequest httpServletRequest
+    ) {
+        return oauthAuthorizationService.revoke(
                 clientId,
                 clientSecret,
-                code,
-                redirectUri,
+                token,
+                tokenTypeHint,
                 httpServletRequest
+        );
+    }
+
+    @ResponseBody
+    @PostMapping(
+            value = "/oauth/introspect",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
+    )
+    public IntrospectionResponse introspect(
+            @RequestParam("client_id") String clientId,
+            @RequestParam("client_secret") String clientSecret,
+            @RequestParam("token") String token
+    ) {
+        return oauthAuthorizationService.introspect(
+                clientId,
+                clientSecret,
+                token
         );
     }
 }

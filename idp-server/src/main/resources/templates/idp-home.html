@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini IdP - Servidor de Identidad</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="page">
+    <main class="shell">
+        <section class="topbar">
+            <div class="brand">
+                <div class="logo">ID</div>
+                <div>
+                    <div class="brand-title">Mini IdP</div>
+                    <div class="brand-subtitle">Servidor de autenticación propio</div>
+                </div>
+            </div>
+            <div class="badge">Identity Provider</div>
+        </section>
+
+        <section class="card card-grid">
+            <div class="panel">
+                <div class="kicker">Servidor activo</div>
+                <h1>Proveedor de identidad con JWT, JWKS, OAuth y TOTP.</h1>
+                <p>
+                    Este servidor centraliza el registro, verificación de correo, login,
+                    segundo factor, emisión de tokens, rotación, revocación e introspección.
+                </p>
+
+                <div class="meta-box">
+                    <div class="meta-row">
+                        <strong>Health</strong>
+                        <code>GET /health</code>
+                    </div>
+                    <div class="meta-row">
+                        <strong>JWKS</strong>
+                        <code>GET /.well-known/jwks.json</code>
+                    </div>
+                    <div class="meta-row">
+                        <strong>Authorize</strong>
+                        <code>GET /oauth/authorize</code>
+                    </div>
+                    <div class="meta-row">
+                        <strong>Token</strong>
+                        <code>POST /oauth/token</code>
+                    </div>
+                    <div class="meta-row">
+                        <strong>Introspection</strong>
+                        <code>POST /oauth/introspect</code>
+                    </div>
+                    <div class="meta-row">
+                        <strong>Revocation</strong>
+                        <code>POST /oauth/revoke</code>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <a class="button" href="/register">Crear cuenta en el IdP</a>
+                </div>
+
+                <p class="footer-note">
+                    El flujo OAuth inicia desde la aplicación cliente, pero el registro de usuarios se realiza en el IdP.
+                </p>
+            </div>
+
+            <div class="panel panel-dark">
+                <div class="kicker">Capacidades implementadas</div>
+                <h2>Flujo de identidad completo</h2>
+                <p>
+                    La aplicación cliente no accede a la clave privada del IdP.
+                    Valida tokens mediante la clave pública expuesta en JWKS.
+                </p>
+
+                <ul class="feature-list">
+                    <li><span>✓</span><div>Registro con contraseña hasheada usando BCrypt.</div></li>
+                    <li><span>✓</span><div>Verificación de correo mediante SMTP real.</div></li>
+                    <li><span>✓</span><div>Login con segundo factor TOTP basado en tiempo.</div></li>
+                    <li><span>✓</span><div>OAuth Authorization Code Flow simplificado.</div></li>
+                    <li><span>✓</span><div>JWT firmado con RS256 y clave privada protegida.</div></li>
+                    <li><span>✓</span><div>Refresh token con rotación, revocación e introspección.</div></li>
+                    <li><span>✓</span><div>Auditoría de eventos críticos de autenticación.</div></li>
+                </ul>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

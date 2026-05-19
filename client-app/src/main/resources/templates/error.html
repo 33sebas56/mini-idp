@@ -3,12 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Client App - Error</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<h1>Error</h1>
+<main class="layout">
+    <nav class="nav">
+        <div class="brand">
+            <div class="logo">APP</div>
+            <div>
+                <div class="brand-title">Client App</div>
+                <div class="brand-subtitle">Error de autenticación</div>
+            </div>
+        </div>
+    </nav>
 
-<p th:text="${error}" style="color: red;"></p>
+    <section class="card">
+        <div class="kicker">Error</div>
+        <h1>No se pudo completar el flujo OAuth.</h1>
 
-<a href="/">Volver</a>
+        <p th:text="${error}" class="alert"></p>
+
+        <p>
+            El error puede deberse a un estado OAuth inválido, un código de autorización ausente
+            o un problema durante el intercambio del code por tokens.
+        </p>
+
+        <div class="actions">
+            <a class="button" href="/">Volver al inicio</a>
+            <a class="button button-secondary" href="/login">Intentar de nuevo</a>
+        </div>
+    </section>
+</main>
 </body>
 </html>

@@ -2,25 +2,78 @@
 <html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Mini IdP - TOTP</title>
+    <title>Mini IdP - Segundo Factor</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<h1>Mini IdP</h1>
-<h2>Segundo factor</h2>
+<div class="page">
+    <main class="shell">
+        <section class="topbar">
+            <div class="brand">
+                <div class="logo">2F</div>
+                <div>
+                    <div class="brand-title">Mini IdP</div>
+                    <div class="brand-subtitle">Verificación de segundo factor</div>
+                </div>
+            </div>
+            <div class="badge">TOTP requerido</div>
+        </section>
 
-<p th:if="${message}" th:text="${message}"></p>
-<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+        <section class="card card-grid">
+            <div class="panel">
+                <div class="kicker">Paso 2 de 2</div>
+                <h1>Código TOTP</h1>
+                <p>
+                    Ingrese el código de seis dígitos generado por su aplicación autenticadora.
+                    El código cambia cada 30 segundos.
+                </p>
 
-<form method="post" action="/oauth/totp">
-    <input type="hidden" name="authorizationRequestId" th:value="${authorizationRequestId}">
-    <input type="hidden" name="challengeToken" th:value="${challengeToken}">
+                <p th:if="${message}" th:text="${message}" class="alert alert-info"></p>
+                <p th:if="${error}" th:text="${error}" class="alert alert-error"></p>
 
-    <div>
-        <label for="code">Código TOTP</label>
-        <input id="code" name="code" type="text" inputmode="numeric" maxlength="6" required>
-    </div>
+                <form class="form" method="post" action="/oauth/totp">
+                    <input type="hidden" name="authorizationRequestId" th:value="${authorizationRequestId}">
+                    <input type="hidden" name="challengeToken" th:value="${challengeToken}">
 
-    <button type="submit">Autorizar</button>
-</form>
+                    <div class="field">
+                        <label for="code">Código de autenticación</label>
+                        <input id="code"
+                               class="code-input"
+                               name="code"
+                               type="text"
+                               inputmode="numeric"
+                               pattern="[0-9]{6}"
+                               maxlength="6"
+                               minlength="6"
+                               required
+                               autocomplete="one-time-code">
+                    </div>
+
+                    <button type="submit">Autorizar aplicación cliente</button>
+                </form>
+
+                <p class="footer-note">
+                    Si el código falla, espere al siguiente ciclo de la app autenticadora e intente de nuevo.
+                </p>
+            </div>
+
+            <div class="panel panel-dark">
+                <div class="kicker">Seguridad</div>
+                <h2>Segundo factor basado en tiempo</h2>
+                <p>
+                    Este paso protege el inicio de sesión aunque la contraseña haya sido comprometida.
+                    El IdP solo emitirá el código OAuth si el TOTP es válido.
+                </p>
+
+                <ul class="feature-list">
+                    <li><span>✓</span><div>El challenge tiene expiración temporal.</div></li>
+                    <li><span>✓</span><div>El código TOTP se valida en el servidor de identidad.</div></li>
+                    <li><span>✓</span><div>El authorization code se marca como usado tras el intercambio.</div></li>
+                    <li><span>✓</span><div>Los eventos quedan registrados en auditoría.</div></li>
+                </ul>
+            </div>
+        </section>
+    </main>
+</div>
 </body>
 </html>

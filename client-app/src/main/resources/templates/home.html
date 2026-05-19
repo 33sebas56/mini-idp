@@ -2,17 +2,108 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Client App</title>
+    <title>Client App - Mini IdP</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<h1>Client App</h1>
-<p>Aplicación cliente protegida por Mini IdP.</p>
+<main class="layout">
+    <nav class="nav">
+        <div class="brand">
+            <div class="logo">APP</div>
+            <div>
+                <div class="brand-title">Client App</div>
+                <div class="brand-subtitle">Aplicación consumidora de identidad</div>
+            </div>
+        </div>
 
-<a href="/login">Iniciar sesión con Mini IdP</a>
+        <div class="nav-actions">
+            <span class="badge">Protegida por Mini IdP</span>
+        </div>
+    </nav>
 
-<hr>
+    <section class="hero">
+        <div class="card">
+            <div class="kicker">Demo local</div>
+            <h1>Aplicación cliente protegida con OAuth y JWT.</h1>
 
-<p>Endpoint protegido de API:</p>
-<code>GET /api/profile</code>
+            <p>
+                Esta aplicación no gestiona contraseñas. Redirige al servidor de identidad,
+                recibe un authorization code y lo intercambia por access token y refresh token.
+            </p>
+
+            <div class="actions">
+                <a class="button" href="/login">Iniciar sesión con Mini IdP</a>
+                <a class="button button-secondary" href="http://localhost:9000/register">Crear cuenta nueva</a>
+                <a class="button button-secondary" href="/health">Ver health check</a>
+            </div>
+
+            <div class="section">
+                <div class="grid grid-2">
+                    <div class="metric">
+                        <div class="metric-label">Endpoint público</div>
+                        <div class="metric-value">GET /health</div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-label">Endpoint protegido</div>
+                        <div class="metric-value">GET /api/profile</div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-label">Callback OAuth</div>
+                        <div class="metric-value">GET /callback</div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-label">Servidor IdP</div>
+                        <div class="metric-value">http://localhost:9000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-dark">
+            <div class="kicker">Flujo implementado</div>
+            <h2>Authorization Code Flow</h2>
+
+            <p>
+                El login ocurre en el IdP. La app cliente solo recibe tokens después
+                de que el usuario supera contraseña y segundo factor TOTP.
+            </p>
+
+            <ul class="list">
+                <li>
+                    <span>1</span>
+                    <div>La app redirige al IdP mediante <strong>/oauth/authorize</strong>.</div>
+                </li>
+
+                <li>
+                    <span>2</span>
+                    <div>El IdP valida correo, contraseña y código TOTP.</div>
+                </li>
+
+                <li>
+                    <span>3</span>
+                    <div>El IdP devuelve un authorization code al <strong>/callback</strong>.</div>
+                </li>
+
+                <li>
+                    <span>4</span>
+                    <div>La app intercambia el code por access token y refresh token.</div>
+                </li>
+
+                <li>
+                    <span>5</span>
+                    <div>La app valida el JWT usando el JWKS público del IdP.</div>
+                </li>
+
+                <li>
+                    <span>6</span>
+                    <div>El refresh token puede rotarse para renovar el access token.</div>
+                </li>
+            </ul>
+        </div>
+    </section>
+</main>
 </body>
 </html>

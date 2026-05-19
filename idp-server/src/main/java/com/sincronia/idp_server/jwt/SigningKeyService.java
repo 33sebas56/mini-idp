@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.sincronia.idp_server.exception.ApiException;
 import com.sincronia.idp_server.totp.CryptoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +44,18 @@ public class SigningKeyService {
             return RSAKey.parse(privateJwk);
         } catch (Exception exception) {
             throw new IllegalStateException("Could not load private signing key", exception);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public RSAKey getPublicKeyByKid(String kid) {
+        SigningKey signingKey = signingKeyRepository.findByKid(kid)
+                .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Clave pública no encontrada para kid"));
+
+        try {
+            return RSAKey.parse(signingKey.getPublicJwk());
+        } catch (Exception exception) {
+            throw new IllegalStateException("Could not parse public signing key", exception);
         }
     }
 

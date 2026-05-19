@@ -12,6 +12,9 @@ public record TokenResponse(
         @JsonProperty("expires_in")
         long expiresIn,
 
+        @JsonProperty("refresh_token")
+        String refreshToken,
+
         String scope
 ) {
 }

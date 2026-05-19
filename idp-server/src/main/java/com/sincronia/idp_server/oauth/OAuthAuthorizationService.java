@@ -4,7 +4,9 @@ import com.sincronia.idp_server.audit.AuditService;
 import com.sincronia.idp_server.exception.ApiException;
 import com.sincronia.idp_server.jwt.IssuedAccessToken;
 import com.sincronia.idp_server.jwt.JwtService;
+import com.sincronia.idp_server.oauth.dto.IntrospectionResponse;
 import com.sincronia.idp_server.oauth.dto.OAuthPasswordStepResult;
+import com.sincronia.idp_server.oauth.dto.RevokeResponse;
 import com.sincronia.idp_server.oauth.dto.TokenResponse;
 import com.sincronia.idp_server.token.TokenService;
 import com.sincronia.idp_server.totp.LoginChallenge;
@@ -28,6 +30,7 @@ import java.util.UUID;
 public class OAuthAuthorizationService {
 
     private static final String AUTHORIZATION_CODE_GRANT = "authorization_code";
+    private static final String REFRESH_TOKEN_GRANT = "refresh_token";
 
     private final OAuthClientRepository oauthClientRepository;
     private final OAuthAuthorizationRequestRepository authorizationRequestRepository;
@@ -38,6 +41,7 @@ public class OAuthAuthorizationService {
     private final TokenService tokenService;
     private final TotpService totpService;
     private final JwtService jwtService;
+    private final TokenLifecycleService tokenLifecycleService;
     private final AuditService auditService;
 
     public OAuthAuthorizationService(
@@ -50,6 +54,7 @@ public class OAuthAuthorizationService {
             TokenService tokenService,
             TotpService totpService,
             JwtService jwtService,
+            TokenLifecycleService tokenLifecycleService,
             AuditService auditService
     ) {
         this.oauthClientRepository = oauthClientRepository;
@@ -61,6 +66,7 @@ public class OAuthAuthorizationService {
         this.tokenService = tokenService;
         this.totpService = totpService;
         this.jwtService = jwtService;
+        this.tokenLifecycleService = tokenLifecycleService;
         this.auditService = auditService;
     }
 
@@ -196,18 +202,45 @@ public class OAuthAuthorizationService {
     }
 
     @Transactional
-    public TokenResponse exchangeAuthorizationCode(
+    public TokenResponse token(
             String grantType,
+            String clientId,
+            String clientSecret,
+            String code,
+            String redirectUri,
+            String refreshToken,
+            HttpServletRequest httpServletRequest
+    ) {
+        if (AUTHORIZATION_CODE_GRANT.equals(grantType)) {
+            return exchangeAuthorizationCode(
+                    clientId,
+                    clientSecret,
+                    code,
+                    redirectUri,
+                    httpServletRequest
+            );
+        }
+
+        if (REFRESH_TOKEN_GRANT.equals(grantType)) {
+            return tokenLifecycleService.exchangeRefreshToken(
+                    clientId,
+                    clientSecret,
+                    refreshToken,
+                    httpServletRequest
+            );
+        }
+
+        throw new ApiException(HttpStatus.BAD_REQUEST, "grant_type no soportado");
+    }
+
+    @Transactional
+    public TokenResponse exchangeAuthorizationCode(
             String clientId,
             String clientSecret,
             String code,
             String redirectUri,
             HttpServletRequest httpServletRequest
     ) {
-        if (!AUTHORIZATION_CODE_GRANT.equals(grantType)) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "grant_type no soportado");
-        }
-
         OAuthClient client = getEnabledClient(clientId);
 
         if (!passwordEncoder.matches(clientSecret, client.getClientSecretHash())) {
@@ -243,18 +276,55 @@ public class OAuthAuthorizationService {
                 authorizationCode.getScope()
         );
 
+        String refreshToken = tokenLifecycleService.issueRefreshToken(
+                authorizationCode.getUser(),
+                clientId,
+                authorizationCode.getScope()
+        );
+
         auditService.record(
                 authorizationCode.getUser(),
                 "OAUTH_TOKEN_ISSUED",
                 httpServletRequest,
-                "Access token issued from authorization code"
+                "Access token and refresh token issued from authorization code"
         );
 
         return new TokenResponse(
                 accessToken.value(),
                 accessToken.tokenType(),
                 accessToken.expiresIn(),
+                refreshToken,
                 authorizationCode.getScope()
+        );
+    }
+
+    @Transactional
+    public RevokeResponse revoke(
+            String clientId,
+            String clientSecret,
+            String token,
+            String tokenTypeHint,
+            HttpServletRequest httpServletRequest
+    ) {
+        return tokenLifecycleService.revoke(
+                clientId,
+                clientSecret,
+                token,
+                tokenTypeHint,
+                httpServletRequest
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public IntrospectionResponse introspect(
+            String clientId,
+            String clientSecret,
+            String token
+    ) {
+        return tokenLifecycleService.introspect(
+                clientId,
+                clientSecret,
+                token
         );
     }
 

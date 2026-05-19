@@ -3,11 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Mini IdP - Error OAuth</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<h1>Mini IdP</h1>
-<h2>Error OAuth</h2>
+<div class="page">
+    <main class="shell">
+        <section class="topbar">
+            <div class="brand">
+                <div class="logo">!</div>
+                <div>
+                    <div class="brand-title">Mini IdP</div>
+                    <div class="brand-subtitle">Error de autorización</div>
+                </div>
+            </div>
+            <div class="badge">OAuth error</div>
+        </section>
 
-<p th:text="${error}" style="color: red;"></p>
+        <section class="card">
+            <div class="panel">
+                <div class="kicker">Solicitud rechazada</div>
+                <h1>No se pudo procesar la autorización</h1>
+
+                <p th:text="${error}" class="alert alert-error"></p>
+
+                <p>
+                    La solicitud OAuth fue rechazada por el servidor de identidad. Esto puede ocurrir
+                    por un redirect URI inválido, un cliente no registrado, un scope no permitido o
+                    una solicitud expirada.
+                </p>
+
+                <a class="button" href="/">Volver al inicio del IdP</a>
+            </div>
+        </section>
+    </main>
+</div>
 </body>
 </html>

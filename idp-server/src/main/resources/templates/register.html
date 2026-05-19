@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini IdP - Registro</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="page">
+    <main class="shell">
+        <section class="topbar">
+            <div class="brand">
+                <div class="logo">ID</div>
+                <div>
+                    <div class="brand-title">Mini IdP</div>
+                    <div class="brand-subtitle">Registro de usuario</div>
+                </div>
+            </div>
+            <div class="badge">Cuenta nueva</div>
+        </section>
+
+        <section class="card card-grid">
+            <div class="panel">
+                <div class="kicker">Crear cuenta</div>
+                <h1>Registro en el servidor de identidad</h1>
+                <p>
+                    Cree una cuenta local en el IdP. Después del registro se enviará un correo
+                    de verificación mediante SMTP real.
+                </p>
+
+                <p th:if="${error}" th:text="${error}" class="alert alert-error"></p>
+
+                <form class="form" method="post" action="/register">
+                    <div class="field">
+                        <label for="email">Correo electrónico</label>
+                        <input id="email"
+                               name="email"
+                               type="email"
+                               required
+                               autocomplete="username"
+                               th:value="${email}">
+                    </div>
+
+                    <div class="field">
+                        <label for="password">Contraseña</label>
+                        <input id="password"
+                               name="password"
+                               type="password"
+                               required
+                               minlength="10"
+                               autocomplete="new-password">
+                    </div>
+
+                    <div class="field">
+                        <label for="confirmPassword">Confirmar contraseña</label>
+                        <input id="confirmPassword"
+                               name="confirmPassword"
+                               type="password"
+                               required
+                               minlength="10"
+                               autocomplete="new-password">
+                    </div>
+
+                    <button type="submit">Crear cuenta y enviar verificación</button>
+                </form>
+
+                <p class="footer-note">
+                    La contraseña se almacena usando BCrypt. El correo debe verificarse antes de iniciar sesión.
+                </p>
+            </div>
+
+            <div class="panel panel-dark">
+                <div class="kicker">Seguridad del registro</div>
+                <h2>Validación inicial de identidad</h2>
+                <p>
+                    El registro no habilita el acceso inmediatamente. Primero se valida el correo,
+                    luego el usuario debe iniciar sesión y configurar TOTP.
+                </p>
+
+                <ul class="feature-list">
+                    <li><span>✓</span><div>Contraseña protegida con hash BCrypt.</div></li>
+                    <li><span>✓</span><div>Correo enviado por SMTP real.</div></li>
+                    <li><span>✓</span><div>Token de verificación con expiración.</div></li>
+                    <li><span>✓</span><div>El login se bloquea si el correo no está verificado.</div></li>
+                    <li><span>✓</span><div>El acceso completo requiere TOTP.</div></li>
+                </ul>
+
+                <div class="actions">
+                    <a class="button" href="/">Volver al inicio del IdP</a>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

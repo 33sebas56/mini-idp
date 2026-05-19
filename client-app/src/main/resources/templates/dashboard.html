@@ -3,26 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>Client App - Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<h1>Dashboard</h1>
+<main class="layout">
+    <nav class="nav">
+        <div class="brand">
+            <div class="logo">APP</div>
+            <div>
+                <div class="brand-title">Client App</div>
+                <div class="brand-subtitle">Sesión autenticada mediante Mini IdP</div>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <span class="badge">JWT validado</span>
+            <a class="button button-secondary" href="/logout">Cerrar sesión local</a>
+        </div>
+    </nav>
 
-<p>Autenticación completada mediante OAuth Authorization Code Flow.</p>
+    <section class="card">
+        <div class="kicker">Dashboard</div>
+        <h1>Autenticación completada.</h1>
+        <p>
+            La aplicación cliente recibió un authorization code, lo intercambió por tokens
+            y validó el access token con la clave pública publicada en JWKS.
+        </p>
 
-<ul>
-    <li><strong>Email:</strong> <span th:text="${email}"></span></li>
-    <li><strong>Subject:</strong> <span th:text="${subject}"></span></li>
-    <li><strong>Issuer:</strong> <span th:text="${issuer}"></span></li>
-    <li><strong>Audience:</strong> <span th:text="${audience}"></span></li>
-    <li><strong>Scope:</strong> <span th:text="${scope}"></span></li>
-    <li><strong>JTI:</strong> <span th:text="${jti}"></span></li>
-</ul>
+        <div class="grid grid-2 section">
+            <div class="metric">
+                <div class="metric-label">Email</div>
+                <div class="metric-value" th:text="${email}"></div>
+            </div>
 
-<p><strong>Token preview:</strong></p>
-<code th:text="${tokenPreview}"></code>
+            <div class="metric">
+                <div class="metric-label">Subject</div>
+                <div class="metric-value" th:text="${subject}"></div>
+            </div>
 
-<hr>
+            <div class="metric">
+                <div class="metric-label">Issuer</div>
+                <div class="metric-value" th:text="${issuer}"></div>
+            </div>
 
-<a href="/logout">Cerrar sesión local</a>
+            <div class="metric">
+                <div class="metric-label">Audience</div>
+                <div class="metric-value" th:text="${audience}"></div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">Scope</div>
+                <div class="metric-value" th:text="${scope}"></div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">JTI</div>
+                <div class="metric-value" th:text="${jti}"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Access token preview</h2>
+            <div class="token-box" th:text="${tokenPreview}"></div>
+        </div>
+
+        <div class="section">
+            <h2>Refresh token preview</h2>
+            <div class="token-box" th:text="${refreshTokenPreview}"></div>
+        </div>
+
+        <div class="actions">
+            <a class="button" href="/refresh-token">Renovar access token con refresh token</a>
+            <a class="button button-secondary" href="/api/profile">Ver endpoint protegido</a>
+            <a class="button button-secondary" href="/">Volver al inicio</a>
+        </div>
+    </section>
+</main>
 </body>
 </html>
