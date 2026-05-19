@@ -13,11 +13,12 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Service
 public class JwtService {
+
+    private static final String DEFAULT_SCOPE = "openid profile email";
 
     private final SigningKeyService signingKeyService;
     private final String issuer;
@@ -37,6 +38,10 @@ public class JwtService {
     }
 
     public IssuedAccessToken issueAccessToken(AppUser user) {
+        return issueAccessToken(user, DEFAULT_SCOPE);
+    }
+
+    public IssuedAccessToken issueAccessToken(AppUser user, String scope) {
         try {
             Instant now = Instant.now();
             Instant expiresAt = now.plus(accessTokenMinutes, ChronoUnit.MINUTES);
@@ -52,7 +57,7 @@ public class JwtService {
                     .jwtID(UUID.randomUUID().toString())
                     .claim("email", user.getEmail())
                     .claim("email_verified", user.isEmailVerified())
-                    .claim("scope", "openid profile email")
+                    .claim("scope", normalizeScope(scope))
                     .build();
 
             SignedJWT signedJWT = new SignedJWT(
@@ -73,5 +78,13 @@ public class JwtService {
         } catch (Exception exception) {
             throw new IllegalStateException("Could not issue access token", exception);
         }
+    }
+
+    private String normalizeScope(String scope) {
+        if (scope == null || scope.isBlank()) {
+            return DEFAULT_SCOPE;
+        }
+
+        return scope.trim();
     }
 }

@@ -45,6 +45,14 @@ app:
   client:
     base-url: ${CLIENT_BASE_URL:http://localhost:8080}
 
+  oauth:
+    default-client:
+      client-id: ${APP_OAUTH_CLIENT_ID:client-app}
+      client-secret: ${APP_OAUTH_CLIENT_SECRET:client-secret-123}
+      name: ${APP_OAUTH_CLIENT_NAME:Client App}
+      redirect-uri: ${APP_OAUTH_REDIRECT_URI:http://localhost:8080/callback}
+      allowed-scopes: ${APP_OAUTH_ALLOWED_SCOPES:openid profile email}
+
   mail:
     from: ${APP_MAIL_FROM:no-reply@mini-idp.local}
 

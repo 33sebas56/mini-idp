@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini IdP - TOTP</title>
+</head>
+<body>
+<h1>Mini IdP</h1>
+<h2>Segundo factor</h2>
+
+<p th:if="${message}" th:text="${message}"></p>
+<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
+<form method="post" action="/oauth/totp">
+    <input type="hidden" name="authorizationRequestId" th:value="${authorizationRequestId}">
+    <input type="hidden" name="challengeToken" th:value="${challengeToken}">
+
+    <div>
+        <label for="code">Código TOTP</label>
+        <input id="code" name="code" type="text" inputmode="numeric" maxlength="6" required>
+    </div>
+
+    <button type="submit">Autorizar</button>
+</form>
+</body>
+</html>

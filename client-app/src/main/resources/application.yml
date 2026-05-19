@@ -10,3 +10,11 @@ app:
     issuer: ${IDP_ISSUER:http://localhost:9000}
     jwks-uri: ${IDP_JWKS_URI:http://localhost:9000/.well-known/jwks.json}
     audience: ${IDP_AUDIENCE:client-app}
+    authorization-uri: ${IDP_AUTHORIZATION_URI:http://localhost:9000/oauth/authorize}
+    token-uri: ${IDP_TOKEN_URI:http://localhost:9000/oauth/token}
+
+  oauth:
+    client-id: ${OAUTH_CLIENT_ID:client-app}
+    client-secret: ${OAUTH_CLIENT_SECRET:client-secret-123}
+    redirect-uri: ${OAUTH_REDIRECT_URI:http://localhost:8080/callback}
+    scope: ${OAUTH_SCOPE:openid profile email}

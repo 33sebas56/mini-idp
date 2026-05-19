@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Client App - Dashboard</title>
+</head>
+<body>
+<h1>Dashboard</h1>
+
+<p>Autenticación completada mediante OAuth Authorization Code Flow.</p>
+
+<ul>
+    <li><strong>Email:</strong> <span th:text="${email}"></span></li>
+    <li><strong>Subject:</strong> <span th:text="${subject}"></span></li>
+    <li><strong>Issuer:</strong> <span th:text="${issuer}"></span></li>
+    <li><strong>Audience:</strong> <span th:text="${audience}"></span></li>
+    <li><strong>Scope:</strong> <span th:text="${scope}"></span></li>
+    <li><strong>JTI:</strong> <span th:text="${jti}"></span></li>
+</ul>
+
+<p><strong>Token preview:</strong></p>
+<code th:text="${tokenPreview}"></code>
+
+<hr>
+
+<a href="/logout">Cerrar sesión local</a>
+</body>
+</html>
