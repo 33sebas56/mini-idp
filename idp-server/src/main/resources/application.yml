@@ -36,5 +36,13 @@ spring:
 app:
   security:
     issuer: ${APP_ISSUER:http://localhost:9000}
+    encryption-secret: ${APP_ENCRYPTION_SECRET:dev-only-change-this-secret-before-deploying-123456}
+
   client:
     base-url: ${CLIENT_BASE_URL:http://localhost:8080}
+
+  mail:
+    from: ${APP_MAIL_FROM:no-reply@mini-idp.local}
+
+  totp:
+    issuer: ${APP_TOTP_ISSUER:Mini IdP}
