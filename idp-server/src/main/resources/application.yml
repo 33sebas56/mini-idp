@@ -38,6 +38,10 @@ app:
     issuer: ${APP_ISSUER:http://localhost:9000}
     encryption-secret: ${APP_ENCRYPTION_SECRET:dev-only-change-this-secret-before-deploying-123456}
 
+  jwt:
+    audience: ${APP_JWT_AUDIENCE:client-app}
+    access-token-minutes: ${APP_JWT_ACCESS_TOKEN_MINUTES:15}
+
   client:
     base-url: ${CLIENT_BASE_URL:http://localhost:8080}
 

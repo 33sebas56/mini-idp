@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.sincronia.idp_server.jwt.JwtService;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -34,6 +35,7 @@ public class AuthService {
     private final AuditService auditService;
     private final TotpService totpService;
     private final String issuer;
+    private final JwtService jwtService;
 
     public AuthService(
             AppUserRepository appUserRepository,
@@ -44,6 +46,7 @@ public class AuthService {
             EmailService emailService,
             AuditService auditService,
             TotpService totpService,
+            JwtService jwtService,
             @Value("${app.security.issuer}") String issuer
     ) {
         this.appUserRepository = appUserRepository;
@@ -55,6 +58,7 @@ public class AuthService {
         this.auditService = auditService;
         this.totpService = totpService;
         this.issuer = issuer;
+        this.jwtService = jwtService;
     }
 
     @Transactional
@@ -207,10 +211,9 @@ public class AuthService {
 
         auditService.record(challenge.getUser(), "TOTP_ENABLED", httpServletRequest, "TOTP enabled successfully");
 
-        return new LoginResponse(
-                AuthStatus.AUTHENTICATED,
-                null,
-                "TOTP configurado correctamente. Autenticación completada."
+        return LoginResponse.authenticated(
+                "TOTP configurado correctamente. Autenticación completada.",
+                jwtService.issueAccessToken(challenge.getUser())
         );
     }
 
@@ -232,10 +235,9 @@ public class AuthService {
 
         auditService.record(challenge.getUser(), "LOGIN_COMPLETED", httpServletRequest, "Password and TOTP accepted");
 
-        return new LoginResponse(
-                AuthStatus.AUTHENTICATED,
-                null,
-                "Autenticación completada."
+        return LoginResponse.authenticated(
+                "Autenticación completada.",
+                jwtService.issueAccessToken(challenge.getUser())
         );
     }
 

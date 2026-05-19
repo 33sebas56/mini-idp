@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: client-app
+
+app:
+  idp:
+    issuer: ${IDP_ISSUER:http://localhost:9000}
+    jwks-uri: ${IDP_JWKS_URI:http://localhost:9000/.well-known/jwks.json}
+    audience: ${IDP_AUDIENCE:client-app}
