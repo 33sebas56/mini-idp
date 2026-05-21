@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Mini IdP - Registro exitoso</title>
@@ -25,7 +25,7 @@
                 <h1>Revise su correo electrónico</h1>
 
                 <p>
-                    Se creó la cuenta para:
+                    Se envió un enlace de verificación al correo registrado.
                 </p>
 
                 <div class="meta-box">
@@ -35,36 +35,42 @@
                     </div>
                     <div class="meta-row">
                         <strong>Estado</strong>
-                        <code>email_verified = false</code>
+                        <code>Verificación pendiente</code>
                     </div>
                     <div class="meta-row">
                         <strong>Siguiente paso</strong>
-                        <code>Abrir enlace de verificación</code>
+                        <code>Abrir enlace recibido por correo</code>
                     </div>
                 </div>
 
-                <p>
-                    El enlace de verificación fue enviado por SMTP. Después de verificar el correo,
-                    podrá iniciar sesión desde la aplicación cliente.
-                </p>
-
                 <div class="actions">
                     <a class="button" href="/register">Registrar otra cuenta</a>
-                    <a class="button" href="/">Volver al IdP</a>
+                    <a class="button button-secondary" href="/">Volver al IdP</a>
                 </div>
             </div>
 
             <div class="panel panel-dark">
-                <div class="kicker">Flujo restante</div>
-                <h2>Después de verificar el correo</h2>
+                <div class="kicker">Siguiente fase</div>
+                <h2>Después de verificar</h2>
+                <p>
+                    El usuario podrá iniciar sesión desde la aplicación cliente y continuar con el segundo factor.
+                </p>
 
-                <ul class="feature-list">
-                    <li><span>1</span><div>Abra el enlace de verificación recibido por correo.</div></li>
-                    <li><span>2</span><div>Ingrese a la aplicación cliente.</div></li>
-                    <li><span>3</span><div>Autentíquese en el IdP con contraseña.</div></li>
-                    <li><span>4</span><div>Complete el segundo factor TOTP.</div></li>
-                    <li><span>5</span><div>El cliente recibirá tokens mediante OAuth Authorization Code Flow.</div></li>
-                </ul>
+                <div class="help-wrap">
+                    <div class="help-trigger">?</div>
+                    <div class="help-label">Ver flujo restante</div>
+
+                    <div class="help-popover">
+                        <h3>Flujo posterior</h3>
+                        <ul>
+                            <li>Verificar correo desde el enlace recibido.</li>
+                            <li>Ingresar a la aplicación cliente.</li>
+                            <li>Autenticarse en el IdP.</li>
+                            <li>Configurar o validar TOTP.</li>
+                            <li>Recibir tokens mediante OAuth Authorization Code Flow.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
     </main>

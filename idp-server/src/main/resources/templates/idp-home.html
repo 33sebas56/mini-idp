@@ -22,65 +22,43 @@
         <section class="card card-grid">
             <div class="panel">
                 <div class="kicker">Servidor activo</div>
-                <h1>Proveedor de identidad con JWT, JWKS, OAuth y TOTP.</h1>
+                <h1>Identidad centralizada para aplicaciones cliente</h1>
                 <p>
-                    Este servidor centraliza el registro, verificación de correo, login,
-                    segundo factor, emisión de tokens, rotación, revocación e introspección.
+                    Mini IdP gestiona registro, verificación de correo, autenticación, segundo factor y emisión de tokens.
                 </p>
-
-                <div class="meta-box">
-                    <div class="meta-row">
-                        <strong>Health</strong>
-                        <code>GET /health</code>
-                    </div>
-                    <div class="meta-row">
-                        <strong>JWKS</strong>
-                        <code>GET /.well-known/jwks.json</code>
-                    </div>
-                    <div class="meta-row">
-                        <strong>Authorize</strong>
-                        <code>GET /oauth/authorize</code>
-                    </div>
-                    <div class="meta-row">
-                        <strong>Token</strong>
-                        <code>POST /oauth/token</code>
-                    </div>
-                    <div class="meta-row">
-                        <strong>Introspection</strong>
-                        <code>POST /oauth/introspect</code>
-                    </div>
-                    <div class="meta-row">
-                        <strong>Revocation</strong>
-                        <code>POST /oauth/revoke</code>
-                    </div>
-                </div>
 
                 <div class="actions">
-                    <a class="button" href="/register">Crear cuenta en el IdP</a>
+                    <a class="button" href="/register">Crear cuenta</a>
+                    <a class="button button-secondary" href="/health">Health check</a>
+                    <a class="button button-secondary" href="/.well-known/jwks.json">JWKS</a>
                 </div>
-
-                <p class="footer-note">
-                    El flujo OAuth inicia desde la aplicación cliente, pero el registro de usuarios se realiza en el IdP.
-                </p>
             </div>
 
             <div class="panel panel-dark">
-                <div class="kicker">Capacidades implementadas</div>
-                <h2>Flujo de identidad completo</h2>
+                <div class="kicker">Backend de identidad</div>
+                <h2>JWT, JWKS, OAuth y TOTP</h2>
                 <p>
-                    La aplicación cliente no accede a la clave privada del IdP.
-                    Valida tokens mediante la clave pública expuesta en JWKS.
+                    El IdP firma tokens con clave privada y publica únicamente la clave pública mediante JWKS.
                 </p>
 
-                <ul class="feature-list">
-                    <li><span>✓</span><div>Registro con contraseña hasheada usando BCrypt.</div></li>
-                    <li><span>✓</span><div>Verificación de correo mediante SMTP real.</div></li>
-                    <li><span>✓</span><div>Login con segundo factor TOTP basado en tiempo.</div></li>
-                    <li><span>✓</span><div>OAuth Authorization Code Flow simplificado.</div></li>
-                    <li><span>✓</span><div>JWT firmado con RS256 y clave privada protegida.</div></li>
-                    <li><span>✓</span><div>Refresh token con rotación, revocación e introspección.</div></li>
-                    <li><span>✓</span><div>Auditoría de eventos críticos de autenticación.</div></li>
-                </ul>
+                <div class="help-wrap">
+                    <div class="help-trigger">?</div>
+                    <div class="help-label">Ver capacidades técnicas</div>
+
+                    <div class="help-popover">
+                        <h3>Capacidades implementadas</h3>
+                        <ul>
+                            <li>Registro con contraseña hasheada.</li>
+                            <li>Verificación de correo vía SMTP.</li>
+                            <li>Login con TOTP.</li>
+                            <li>OAuth Authorization Code Flow.</li>
+                            <li>JWT firmado con RS256.</li>
+                            <li>JWKS público.</li>
+                            <li>Refresh token, rotación, revocación e introspección.</li>
+                            <li>Auditoría y protección contra SQL Injection.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
     </main>

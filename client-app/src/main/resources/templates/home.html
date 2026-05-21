@@ -23,18 +23,17 @@
 
     <section class="hero">
         <div class="card">
-            <div class="kicker">Demo local</div>
-            <h1>Aplicación cliente protegida con OAuth y JWT.</h1>
+            <div class="kicker">Demo desplegada</div>
+            <h1>Aplicación cliente protegida con OAuth y JWT</h1>
 
             <p>
-                Esta aplicación no gestiona contraseñas. Redirige al servidor de identidad,
-                recibe un authorization code y lo intercambia por access token y refresh token.
+                La autenticación se delega al servidor de identidad. Esta aplicación recibe tokens y valida el JWT.
             </p>
 
             <div class="actions">
-                <a class="button" href="/login">Iniciar sesión con Mini IdP</a>
-                <a class="button button-secondary" href="http://localhost:9000/register">Crear cuenta nueva</a>
-                <a class="button button-secondary" href="/health">Ver health check</a>
+                <a class="button" href="/login">Iniciar sesión</a>
+                <a class="button button-secondary" href="https://miniidp-idp.duckdns.org/register">Crear cuenta</a>
+                <a class="button button-secondary" href="/health">Health check</a>
             </div>
 
             <div class="section">
@@ -56,52 +55,36 @@
 
                     <div class="metric">
                         <div class="metric-label">Servidor IdP</div>
-                        <div class="metric-value">http://localhost:9000</div>
+                        <div class="metric-value">https://miniidp-idp.duckdns.org</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="card card-dark">
-            <div class="kicker">Flujo implementado</div>
+            <div class="kicker">Flujo principal</div>
             <h2>Authorization Code Flow</h2>
 
             <p>
-                El login ocurre en el IdP. La app cliente solo recibe tokens después
-                de que el usuario supera contraseña y segundo factor TOTP.
+                La app cliente no recibe contraseñas. El login ocurre en el IdP y el cliente solo consume tokens.
             </p>
 
-            <ul class="list">
-                <li>
-                    <span>1</span>
-                    <div>La app redirige al IdP mediante <strong>/oauth/authorize</strong>.</div>
-                </li>
+            <div class="help-wrap">
+                <div class="help-trigger">?</div>
+                <div class="help-label">Ver pasos del flujo</div>
 
-                <li>
-                    <span>2</span>
-                    <div>El IdP valida correo, contraseña y código TOTP.</div>
-                </li>
-
-                <li>
-                    <span>3</span>
-                    <div>El IdP devuelve un authorization code al <strong>/callback</strong>.</div>
-                </li>
-
-                <li>
-                    <span>4</span>
-                    <div>La app intercambia el code por access token y refresh token.</div>
-                </li>
-
-                <li>
-                    <span>5</span>
-                    <div>La app valida el JWT usando el JWKS público del IdP.</div>
-                </li>
-
-                <li>
-                    <span>6</span>
-                    <div>El refresh token puede rotarse para renovar el access token.</div>
-                </li>
-            </ul>
+                <div class="help-popover">
+                    <h3>Flujo implementado</h3>
+                    <ul>
+                        <li>La app redirige a /oauth/authorize.</li>
+                        <li>El IdP valida correo, contraseña y TOTP.</li>
+                        <li>El IdP devuelve un authorization code al callback.</li>
+                        <li>La app intercambia el code por tokens.</li>
+                        <li>La app valida el JWT usando JWKS público.</li>
+                        <li>El refresh token puede rotarse.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </section>
 </main>

@@ -17,16 +17,15 @@
         </div>
         <div class="nav-actions">
             <span class="badge">JWT validado</span>
-            <a class="button button-secondary" href="/logout">Cerrar sesión local</a>
+            <a class="button button-secondary" href="/logout">Cerrar sesión</a>
         </div>
     </nav>
 
     <section class="card">
         <div class="kicker">Dashboard</div>
-        <h1>Autenticación completada.</h1>
+        <h1>Autenticación completada</h1>
         <p>
-            La aplicación cliente recibió un authorization code, lo intercambió por tokens
-            y validó el access token con la clave pública publicada en JWKS.
+            El access token fue recibido, decodificado y validado por la aplicación cliente.
         </p>
 
         <div class="grid grid-2 section">
@@ -62,17 +61,17 @@
         </div>
 
         <div class="section">
-            <h2>Access token preview</h2>
+            <h2>Access token</h2>
             <div class="token-box" th:text="${tokenPreview}"></div>
         </div>
 
         <div class="section">
-            <h2>Refresh token preview</h2>
+            <h2>Refresh token</h2>
             <div class="token-box" th:text="${refreshTokenPreview}"></div>
         </div>
 
         <div class="actions">
-            <a class="button" href="/refresh-token">Renovar access token con refresh token</a>
+            <a class="button" href="/refresh-token">Renovar access token</a>
             <a class="button button-secondary" href="/api/profile">Ver endpoint protegido</a>
             <a class="button button-secondary" href="/">Volver al inicio</a>
         </div>

@@ -24,8 +24,7 @@
                 <div class="kicker">Crear cuenta</div>
                 <h1>Registro en el servidor de identidad</h1>
                 <p>
-                    Cree una cuenta local en el IdP. Después del registro se enviará un correo
-                    de verificación mediante SMTP real.
+                    Cree una cuenta local en el IdP. Después del registro se enviará un correo de verificación.
                 </p>
 
                 <p th:if="${error}" th:text="${error}" class="alert alert-error"></p>
@@ -61,32 +60,43 @@
                                autocomplete="new-password">
                     </div>
 
-                    <button type="submit">Crear cuenta y enviar verificación</button>
+                    <button type="submit">Crear cuenta</button>
                 </form>
 
                 <p class="footer-note">
-                    La contraseña se almacena usando BCrypt. El correo debe verificarse antes de iniciar sesión.
+                    Después de verificar el correo, el inicio de sesión se realiza desde la aplicación cliente.
                 </p>
             </div>
 
             <div class="panel panel-dark">
-                <div class="kicker">Seguridad del registro</div>
-                <h2>Validación inicial de identidad</h2>
+                <div class="kicker">Identidad segura</div>
+                <h2>Registro con verificación</h2>
                 <p>
-                    El registro no habilita el acceso inmediatamente. Primero se valida el correo,
-                    luego el usuario debe iniciar sesión y configurar TOTP.
+                    El usuario queda creado, pero el acceso se habilita solo después de validar el correo.
                 </p>
 
-                <ul class="feature-list">
-                    <li><span>✓</span><div>Contraseña protegida con hash BCrypt.</div></li>
-                    <li><span>✓</span><div>Correo enviado por SMTP real.</div></li>
-                    <li><span>✓</span><div>Token de verificación con expiración.</div></li>
-                    <li><span>✓</span><div>El login se bloquea si el correo no está verificado.</div></li>
-                    <li><span>✓</span><div>El acceso completo requiere TOTP.</div></li>
-                </ul>
+                <div class="help-wrap">
+                    <div class="help-trigger">?</div>
+                    <div class="help-label">Ver detalles técnicos</div>
+
+                    <div class="help-popover">
+                        <h3>Validación inicial de identidad</h3>
+                        <p>
+                            El registro no habilita el acceso inmediatamente. Primero se valida el correo,
+                            luego el usuario inicia sesión y configura TOTP.
+                        </p>
+                        <ul>
+                            <li>Contraseña protegida con hash BCrypt.</li>
+                            <li>Correo enviado por SMTP real.</li>
+                            <li>Token de verificación con expiración.</li>
+                            <li>El login se bloquea si el correo no está verificado.</li>
+                            <li>El acceso completo requiere TOTP.</li>
+                        </ul>
+                    </div>
+                </div>
 
                 <div class="actions">
-                    <a class="button" href="/">Volver al inicio del IdP</a>
+                    <a class="button" href="/">Volver al inicio</a>
                 </div>
             </div>
         </section>

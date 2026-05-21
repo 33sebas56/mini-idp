@@ -25,7 +25,6 @@
                 <h1>Código TOTP</h1>
                 <p>
                     Ingrese el código de seis dígitos generado por su aplicación autenticadora.
-                    El código cambia cada 30 segundos.
                 </p>
 
                 <p th:if="${message}" th:text="${message}" class="alert alert-info"></p>
@@ -49,28 +48,31 @@
                                autocomplete="one-time-code">
                     </div>
 
-                    <button type="submit">Autorizar aplicación cliente</button>
+                    <button type="submit">Autorizar</button>
                 </form>
-
-                <p class="footer-note">
-                    Si el código falla, espere al siguiente ciclo de la app autenticadora e intente de nuevo.
-                </p>
             </div>
 
             <div class="panel panel-dark">
-                <div class="kicker">Seguridad</div>
-                <h2>Segundo factor basado en tiempo</h2>
+                <div class="kicker">Segundo factor</div>
+                <h2>Protección adicional</h2>
                 <p>
-                    Este paso protege el inicio de sesión aunque la contraseña haya sido comprometida.
                     El IdP solo emitirá el código OAuth si el TOTP es válido.
                 </p>
 
-                <ul class="feature-list">
-                    <li><span>✓</span><div>El challenge tiene expiración temporal.</div></li>
-                    <li><span>✓</span><div>El código TOTP se valida en el servidor de identidad.</div></li>
-                    <li><span>✓</span><div>El authorization code se marca como usado tras el intercambio.</div></li>
-                    <li><span>✓</span><div>Los eventos quedan registrados en auditoría.</div></li>
-                </ul>
+                <div class="help-wrap">
+                    <div class="help-trigger">?</div>
+                    <div class="help-label">Ver detalles TOTP</div>
+
+                    <div class="help-popover">
+                        <h3>Control de segundo factor</h3>
+                        <ul>
+                            <li>El challenge tiene expiración temporal.</li>
+                            <li>El código TOTP se valida en el servidor.</li>
+                            <li>El authorization code se genera solo tras validar TOTP.</li>
+                            <li>Los eventos quedan registrados en auditoría.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
     </main>

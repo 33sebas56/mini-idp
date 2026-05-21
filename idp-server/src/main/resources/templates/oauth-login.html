@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Mini IdP - Login OAuth</title>
@@ -24,8 +24,7 @@
                 <div class="kicker">Paso 1 de 2</div>
                 <h1>Iniciar sesión</h1>
                 <p>
-                    La aplicación cliente solicitó autenticación. Ingrese sus credenciales
-                    para continuar con la verificación de segundo factor.
+                    Ingrese sus credenciales para continuar con la verificación de segundo factor.
                 </p>
 
                 <p th:if="${error}" th:text="${error}" class="alert alert-error"></p>
@@ -43,12 +42,8 @@
                         <input id="password" name="password" type="password" required autocomplete="current-password">
                     </div>
 
-                    <button type="submit">Continuar con TOTP</button>
+                    <button type="submit">Continuar</button>
                 </form>
-
-                <p class="footer-note">
-                    Sus credenciales se ingresan únicamente en el IdP. La aplicación cliente no recibe su contraseña.
-                </p>
 
                 <div class="actions">
                     <a class="button button-secondary" href="/register">Crear cuenta nueva</a>
@@ -57,33 +52,26 @@
 
             <div class="panel panel-dark">
                 <div class="kicker">Solicitud OAuth</div>
-                <h2>Detalles de autorización</h2>
+                <h2>Autenticación en el IdP</h2>
                 <p>
-                    El IdP validará la identidad y, si el segundo factor es correcto,
-                    emitirá un authorization code para la aplicación cliente.
+                    La aplicación cliente no recibe la contraseña. Solo recibirá un código de autorización.
                 </p>
 
-                <div class="meta-box">
-                    <div class="meta-row">
-                        <strong>Client ID</strong>
-                        <code th:text="${clientId}"></code>
-                    </div>
-                    <div class="meta-row">
-                        <strong>Redirect URI</strong>
-                        <code th:text="${redirectUri}"></code>
-                    </div>
-                    <div class="meta-row">
-                        <strong>Scope</strong>
-                        <code th:text="${scope}"></code>
+                <div class="help-wrap">
+                    <div class="help-trigger">?</div>
+                    <div class="help-label">Ver detalles OAuth</div>
+
+                    <div class="help-popover">
+                        <h3>Solicitud de autorización</h3>
+                        <ul>
+                            <li>Client ID: <span th:text="${clientId}"></span></li>
+                            <li>Redirect URI: <span th:text="${redirectUri}"></span></li>
+                            <li>Scope: <span th:text="${scope}"></span></li>
+                            <li>El password se valida únicamente en el IdP.</li>
+                            <li>El cliente recibe un authorization code, no credenciales.</li>
+                        </ul>
                     </div>
                 </div>
-
-                <ul class="feature-list">
-                    <li><span>1</span><div>Validación de correo y contraseña.</div></li>
-                    <li><span>2</span><div>Validación de código TOTP.</div></li>
-                    <li><span>3</span><div>Generación de authorization code.</div></li>
-                    <li><span>4</span><div>Intercambio del code por tokens.</div></li>
-                </ul>
             </div>
         </section>
     </main>

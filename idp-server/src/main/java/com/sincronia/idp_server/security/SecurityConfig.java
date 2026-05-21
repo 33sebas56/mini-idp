@@ -19,10 +19,17 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/auth/**", "/oauth/**", "/security/sql-injection-demo")
+                        .ignoringRequestMatchers(
+                                "/auth/**",
+                                "/oauth/**",
+                                "/register",
+                                "/security/sql-injection-demo"
+                        )
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/").permitAll()
                         .requestMatchers("/health").permitAll()
+                        .requestMatchers("/register").permitAll()
                         .requestMatchers("/.well-known/jwks.json").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/oauth/**").permitAll()
