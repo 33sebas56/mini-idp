@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini IdP - Configurar TOTP</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="page">
+    <main class="shell">
+        <section class="topbar">
+            <div class="brand">
+                <div class="logo">2F</div>
+                <div>
+                    <div class="brand-title">Mini IdP</div>
+                    <div class="brand-subtitle">Configuración de segundo factor</div>
+                </div>
+            </div>
+            <div class="badge">TOTP Setup</div>
+        </section>
+
+        <section class="card card-grid">
+            <div class="panel">
+                <div class="kicker">Segundo factor</div>
+                <h1>Configurar autenticador</h1>
+                <p>
+                    Ingrese sus credenciales para generar el código QR de configuración TOTP.
+                </p>
+
+                <p id="messageBox" class="alert alert-info hidden"></p>
+                <p id="errorBox" class="alert alert-error hidden"></p>
+
+                <form id="totpStartForm" class="form">
+                    <div class="field">
+                        <label for="email">Correo electrónico</label>
+                        <input id="email" name="email" type="email" required autocomplete="username">
+                    </div>
+
+                    <div class="field">
+                        <label for="password">Contraseña</label>
+                        <input id="password" name="password" type="password" required autocomplete="current-password">
+                    </div>
+
+                    <button type="submit">Generar QR</button>
+                </form>
+
+                <section id="setupSection" class="hidden">
+                    <div class="qr-card">
+                        <img id="qrImage" alt="Código QR TOTP">
+                    </div>
+
+                    <div class="field">
+                        <label>Clave secreta manual</label>
+                        <div id="secretText" class="secret-box"></div>
+                    </div>
+
+                    <form id="totpConfirmForm" class="form">
+                        <div class="field">
+                            <label for="code">Código TOTP de 6 dígitos</label>
+                            <input id="code"
+                                   class="code-input"
+                                   name="code"
+                                   type="text"
+                                   inputmode="numeric"
+                                   pattern="[0-9]{6}"
+                                   maxlength="6"
+                                   minlength="6"
+                                   required
+                                   autocomplete="one-time-code">
+                        </div>
+
+                        <button type="submit">Confirmar TOTP</button>
+                    </form>
+                </section>
+
+                <section id="successSection" class="hidden">
+                    <div class="success-box">
+                        <strong>TOTP configurado correctamente.</strong>
+                        <p>Ahora puede iniciar sesión desde la aplicación cliente.</p>
+                    </div>
+
+                    <div class="actions">
+                        <a class="button" href="https://miniidp-app.duckdns.org">Ir a Client App</a>
+                        <a class="button button-secondary" href="/">Volver al IdP</a>
+                    </div>
+                </section>
+            </div>
+
+            <div class="panel panel-dark">
+                <div class="kicker">Autenticación fuerte</div>
+                <h2>Escanee el QR con su app autenticadora</h2>
+                <p>
+                    Use Google Authenticator, Microsoft Authenticator, Authy u otra app compatible con TOTP.
+                </p>
+
+                <div class="help-wrap">
+                    <div class="help-trigger">?</div>
+                    <div class="help-label">Ver detalles técnicos</div>
+
+                    <div class="help-popover">
+                        <h3>Configuración TOTP</h3>
+                        <ul>
+                            <li>El secret se genera en el IdP.</li>
+                            <li>El usuario confirma con un código de seis dígitos.</li>
+                            <li>El secret se guarda cifrado en base de datos.</li>
+                            <li>El acceso OAuth exige TOTP después de la contraseña.</li>
+                            <li>Si el usuario pierde la app, debe pasar recuperación por correo.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="/js/totp-setup.js"></script>
+</body>
+</html>
