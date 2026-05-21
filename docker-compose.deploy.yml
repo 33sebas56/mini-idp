@@ -1,0 +1,81 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mini-idp-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - mini_idp_pgdata:/var/lib/postgresql/data
+    networks:
+      - mini-idp-net
+
+  idp-server:
+    build:
+      context: ./idp-server
+    container_name: mini-idp-idp-server
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+
+      APP_ISSUER: ${APP_ISSUER}
+      CLIENT_BASE_URL: ${CLIENT_BASE_URL}
+      APP_ENCRYPTION_SECRET: ${APP_ENCRYPTION_SECRET}
+      APP_JWT_AUDIENCE: ${APP_JWT_AUDIENCE}
+      APP_JWT_ACCESS_TOKEN_MINUTES: ${APP_JWT_ACCESS_TOKEN_MINUTES}
+
+      APP_OAUTH_CLIENT_ID: ${APP_OAUTH_CLIENT_ID}
+      APP_OAUTH_CLIENT_SECRET: ${APP_OAUTH_CLIENT_SECRET}
+      APP_OAUTH_CLIENT_NAME: ${APP_OAUTH_CLIENT_NAME}
+      APP_OAUTH_REDIRECT_URI: ${APP_OAUTH_REDIRECT_URI}
+      APP_OAUTH_ALLOWED_SCOPES: ${APP_OAUTH_ALLOWED_SCOPES}
+
+      APP_TOTP_ISSUER: ${APP_TOTP_ISSUER}
+
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_AUTH: ${SMTP_AUTH}
+      SMTP_STARTTLS: ${SMTP_STARTTLS}
+      APP_MAIL_FROM: ${APP_MAIL_FROM}
+    ports:
+      - "127.0.0.1:9000:9000"
+    networks:
+      - mini-idp-net
+
+  client-app:
+    build:
+      context: ./client-app
+    container_name: mini-idp-client-app
+    restart: unless-stopped
+    depends_on:
+      - idp-server
+    environment:
+      IDP_ISSUER: ${IDP_ISSUER}
+      IDP_JWKS_URI: ${IDP_JWKS_URI}
+      IDP_AUDIENCE: ${IDP_AUDIENCE}
+      IDP_AUTHORIZATION_URI: ${IDP_AUTHORIZATION_URI}
+      IDP_TOKEN_URI: ${IDP_TOKEN_URI}
+
+      OAUTH_CLIENT_ID: ${OAUTH_CLIENT_ID}
+      OAUTH_CLIENT_SECRET: ${OAUTH_CLIENT_SECRET}
+      OAUTH_REDIRECT_URI: ${OAUTH_REDIRECT_URI}
+      OAUTH_SCOPE: ${OAUTH_SCOPE}
+    ports:
+      - "127.0.0.1:8080:8080"
+    networks:
+      - mini-idp-net
+
+volumes:
+  mini_idp_pgdata:
+
+networks:
+  mini-idp-net:
+    driver: bridge
