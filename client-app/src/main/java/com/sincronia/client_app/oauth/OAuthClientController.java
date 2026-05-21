@@ -126,6 +126,27 @@ public class OAuthClientController {
         return "dashboard";
     }
 
+    @GetMapping("/protected-profile")
+    public String protectedProfile(HttpSession session, Model model) {
+        String accessToken = (String) session.getAttribute("access_token");
+
+        if (accessToken == null || accessToken.isBlank()) {
+            return "redirect:/login";
+        }
+
+        Jwt jwt = jwtDecoder.decode(accessToken);
+
+        model.addAttribute("message", "Token validado correctamente por client-app usando el JWKS público del IdP.");
+        model.addAttribute("email", jwt.getClaimAsString("email"));
+        model.addAttribute("subject", jwt.getSubject());
+        model.addAttribute("issuer", jwt.getIssuer().toString());
+        model.addAttribute("audience", jwt.getAudience());
+        model.addAttribute("scope", jwt.getClaimAsString("scope"));
+        model.addAttribute("jti", jwt.getId());
+
+        return "protected-profile";
+    }
+
     @GetMapping("/refresh-token")
     public String refreshToken(HttpSession session) {
         String refreshToken = (String) session.getAttribute("refresh_token");
